@@ -13,6 +13,31 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 import requests
 
+
+def fill_zero(data):
+    pass
+
+
+def fill_mean(data):
+    pass
+
+
+def fill_inf(data):
+    pass
+
+
+def fill_median(data):
+    pass
+
+
+def drop_na(data):
+    pass
+
+
+def fill_avg(data):
+    pass
+
+
 print('\n - Lendo o arquivo com o dataset sobre diabetes')
 data = pd.read_excel('diabetes_dataset.xlsx')
 
