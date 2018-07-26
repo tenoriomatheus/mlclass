@@ -7,6 +7,7 @@ Criação de modelo preditivo para diabetes e envio para verificação de peform
 no servidor.
 
 @author: Aydano Machado <aydano.machado@gmail.com>
+@editors: Matheus Tenório e Thiago Miranda
 """
 
 import pandas as pd
@@ -15,11 +16,13 @@ import requests
 from time import sleep
 
 
+
 def fill_zero(data_):
     for col_ in data_:
         data_[col_] = data_[col_].fillna(0)
 
     return data_
+
 
 
 def fill_mean(data_):
@@ -38,14 +41,28 @@ def fill_inf(data_):
 
 
 def fill_median(data_):
+    for col_ in data_:
+        data_[col_] = data_[col_].fillna(data_[col_].median())
+
     return data_
 
 
 def drop_na(data_):
+    data_ = data_.dropna(how='any')
+
     return data_
 
 
 def fill_avg(data_):
+    data_['Pregnancies'] = data_['Pregnancies'].fillna(2)
+    data_['Glucose'] = data_['Glucose'].fillna(85)
+    data_['BloodPressure'] = data_['BloodPressure'].fillna(80)
+    data_['SkinThickness'] = data_['SkinThickness'].fillna()
+    data_['Insulin'] = data_['Insulin'].fillna()
+    data_['BMI'] = data_['BMI'].fillna()
+    data_['DiabetesPedigreeFunction'] = data_['DiabetesPedigreeFunction'].fillna()
+    data_['Age'] = data_['Age'].fillna()
+
     return data_
 
 
@@ -99,12 +116,13 @@ def run_test(model, filepath):
     # print(" - Resposta do servidor:\n", r.text, "\n")
 
 
-methods = {'fill_zero': fill_zero, 'fill_mean': fill_mean, 'fill_inf': fill_inf}
+methods = {'fill_zero': fill_zero, 'fill_mean': fill_mean, 'fill_inf': fill_inf,
+           'fill_median': fill_median, 'drop_na':drop_na, 'fill_avg': fill_avg}
 
 for name in methods:
     print('----' + name + '----')
     X, y = data_pre_processing('diabetes_dataset.xlsx', methods[name])
     model = model_creation(X, y)
-    sleep(5*60)
     response = run_test(model, 'diabetes_app.xlsx')
     print(" - Resposta do servidor:\n", response, "\n")
+    sleep(5*60)
